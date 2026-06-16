@@ -1,0 +1,64 @@
+# Motores de búsqueda permitidos (para que reclutadores te encuentren)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# ── Bots de IA bloqueados ──
+
+# OpenAI (ChatGPT, SearchGPT)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+# Anthropic (Claude)
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Google AI (Gemini / AI Overviews)
+User-agent: Google-Extended
+Disallow: /
+
+# Meta AI (Llama)
+User-agent: FacebookBot
+Disallow: /
+
+# Apple
+User-agent: Applebot-Extended
+Disallow: /
+
+# Common Crawl (dataset masivo usado para entrenar modelos)
+User-agent: CCBot
+Disallow: /
+
+# Cohere
+User-agent: cohere-ai
+Disallow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Disallow: /
+
+# Amazon Alexa / AI
+User-agent: Amazonbot
+Disallow: /
+
+# Bytedance (TikTok AI)
+User-agent: Bytespider
+Disallow: /
+
+# Cualquier otro bot no listado arriba: bloqueado por defecto
+User-agent: *
+Disallow: /
