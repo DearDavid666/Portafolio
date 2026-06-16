@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu Nombre — InfoSec Specialist</title>
+
+  <!-- Security headers via meta (complemento a _headers file) -->
+  <!-- CSP: solo permite recursos de fuentes conocidas, bloquea inline scripts ajenos e iframes -->
+  <meta http-equiv="Content-Security-Policy"
+    content="
+      default-src 'none';
+      script-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src https://fonts.gstatic.com;
+      img-src 'self' data:;
+      connect-src 'none';
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'none';
+    " />
+  <!-- Evita que el navegador adivine el tipo MIME -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <!-- No permite que el sitio sea embebido en iframes (clickjacking) -->
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <!-- Fuerza HTTPS en visitas futuras (1 año) -->
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains" />
+  <!-- No envía Referer a sitios externos -->
+  <meta name="referrer" content="no-referrer" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0A1628;
+      --navy-2:  #0F2040;
+      --navy-3:  #1A3055;
+      --accent:  #00C2FF;
+      --accent2: #0072B8;
+      --text:    #E8EDF5;
+      --muted:   #7A96B8;
+      --border:  rgba(0,194,255,0.15);
+      --card-bg: rgba(15,32,64,0.7);
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-sans: 'IBM Plex Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(10,22,40,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 6rem 2rem 4rem;
+      max-width: 960px; margin: 0 auto;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before { content: '> '; }
+    h1 {
+      font-family: var(--font-sans);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    h1 strong { font-weight: 500; color: var(--accent); }
+    .hero-desc {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 0.75rem 1.75rem;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-cta:hover { background: var(--accent); color: var(--navy); }
+    .hero-grid {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border: 1px solid var(--border);
+      background: var(--border);
+    }
+    .hero-stat {
+      background: var(--navy);
+      padding: 1.25rem 1.5rem;
+    }
+    .hero-stat-num {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--accent);
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2rem; max-width: 960px; margin: 0 auto; }
+    .section-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+    }
+    .section-rule { flex: 1; height: 1px; background: var(--border); }
+    h2 {
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── SOBRE MÍ ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-text { color: var(--muted); font-weight: 300; }
+    .about-text p { margin-bottom: 1rem; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .skill-group h3 {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .skill-bar-item { margin-bottom: 10px; }
+    .skill-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .skill-bar-label span { color: var(--muted); font-family: var(--font-mono); font-size: 11px; }
+    .skill-bar-track {
+      height: 3px;
+      background: var(--navy-3);
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      transition: width 1s ease;
+    }
+
+    /* ── CERTIFICACIONES ── */
+    .cert-filters {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 2rem;
+    }
+    .cert-filter-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cert-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cert-filter-btn.active { background: var(--accent); color: var(--navy); border-color: var(--accent); }
+    .certs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .cert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.2s, opacity 0.2s;
+      cursor: default;
+    }
+    .cert-card:hover { border-color: var(--accent); }
+    .cert-card.hidden { display: none; }
+    .cert-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      text-align: center;
+      line-height: 1.2;
+    }
+    .cert-info h3 { font-size: 13px; font-weight: 500; margin-bottom: 2px; line-height: 1.35; }
+    .cert-info .cert-meta { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+    .cert-status {
+      margin-top: 6px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+    }
+    .cert-status.active { color: #4FD1A5; }
+    .cert-status.expires { color: var(--accent); }
+    .cert-no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      display: none;
+    }
+
+    /* ── PROYECTOS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
+    .project-item {
+      background: var(--navy);
+      padding: 1.5rem 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .project-item:hover { background: var(--navy-2); }
+    .project-item h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .project-item p { font-size: 13px; color: var(--muted); font-weight: 300; }
+    .project-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .project-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .project-arrow {
+      color: var(--muted);
+      font-size: 20px;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .project-item:hover .project-arrow { color: var(--accent); transform: translate(3px,-3px); }
+
+    /* ── OBJETIVOS ── */
+    .goals-timeline { position: relative; padding-left: 1.5rem; }
+    .goals-timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 6px; bottom: 6px;
+      width: 1px; background: var(--border);
+    }
+    .goal-item {
+      position: relative;
+      padding: 0 0 2rem 1.5rem;
+    }
+    .goal-item::before {
+      content: '';
+      position: absolute; left: -4.5px; top: 6px;
+      width: 8px; height: 8px;
+      background: var(--navy);
+      border: 1px solid var(--accent);
+    }
+    .goal-item.done::before { background: var(--accent); }
+    .goal-period {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .goal-item h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .goal-item p { font-size: 13px; color: var(--muted); font-weight: 300; }
+
+    /* ── CONTACTO ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .contact-text { color: var(--muted); font-weight: 300; }
+    .contact-links { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
+    .contact-link {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--navy);
+      padding: 1rem 1.25rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .contact-link:hover { background: var(--navy-2); color: var(--accent); }
+    .contact-link span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1.2rem; }
+      section { padding: 4rem 1.25rem; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .about-grid, .certs-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; }
+    }
+      /* ==========================
+    BADGES / INSIGNIAS
+    ========================== */
+
+    .badges-section{
+    margin-bottom:4rem;
+    }
+
+    .platform-group{
+    margin-bottom:2rem;
+    }
+
+    .platform-title{
+    font-family:var(--font-mono);
+    color:var(--accent);
+    font-size:13px;
+    letter-spacing:.12em;
+    margin-bottom:1rem;
+    }
+
+    .badges-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:1rem;
+    }
+
+    .badge-card{
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    padding:1rem;
+    text-align:center;
+    transition:.25s;
+    }
+
+    .badge-card:hover{
+    border-color:var(--accent);
+    transform:translateY(-4px);
+    }
+
+    .badge-card img{
+    width:100%;
+    height:100px;
+    object-fit:contain;
+    margin-bottom:.75rem;
+    }
+
+    .badge-name{
+    font-size:12px;
+    color:var(--text);
+    line-height:1.4;
+    }
+
+    .badge-source{
+    font-size:10px;
+    color:var(--muted);
+    margin-top:.35rem;
+    font-family:var(--font-mono);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">SEC://portfolio</a>
+    <ul class="nav-links">
+      <li><a href="#sobre-mi">sobre mí</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#certs">certs</a></li>
+      <li><a href="#proyectos">proyectos</a></li>
+      <li><a href="#objetivos">trayectoria</a></li>
+      <li><a href="#roadmap">objetivos</a></li>
+      <li><a href="#contacto">contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div id="hero">
+    <p class="hero-eyebrow">Seguridad de la Información</p>
+    <h1>David García<br /><strong>Protegiendo</strong> sistemas,<br />construyendo confianza.</h1>
+    <p class="hero-desc">
+      Especialista en seguridad de la información con experiencia en operaciones SOC e implementación de sistemas de gestión bajo ISO/IEC 27001.
+    </p>
+    <a href="#contacto" class="hero-cta">Contáctame →</a>
+
+    <div class="hero-grid">
+      <div class="hero-stat">
+        <div class="hero-stat-num">Lic.</div>
+        <div class="hero-stat-label">SEGURIDAD EN TI</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">ISO</div>
+        <div class="hero-stat-label">27001 LEAD IMPLEMENTER</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">GRC</div>
+        <div class="hero-stat-label">& SOC OPERATIONS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOBRE MÍ -->
+  <section id="sobre-mi">
+    <div class="section-header">
+      <span class="section-tag">01 / SOBRE MÍ</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="about-grid">
+      <div>
+        <h2>Quién soy</h2>
+        <div class="about-text" style="margin-top:1.5rem;">
+          <p>
+            Técnico en Programación Web y Licenciado en Seguridad en Tecnologías de la Información. Me especializo en la gestión de riesgos y el cumplimiento normativo, con experiencia operativa en respuesta a incidentes y en la implementación de sistemas de gestión de seguridad de la información.
+          </p>
+          <p>
+            Combino una base técnica en desarrollo con una mentalidad analítica orientada a la seguridad, lo que me permite entender los sistemas que protejo desde adentro.
+          </p>
+        </div>
+        <div class="about-tags">
+          <span class="tag">ISO 27001</span>
+          <span class="tag">GRC</span>
+          <span class="tag">SOC Operations</span>
+          <span class="tag">Incident Response</span>
+          <span class="tag">Risk Management</span>
+          <span class="tag">Compliance</span>
+        </div>
+      </div>
+      <div>
+        <!-- Placeholder avatar / datos rápidos -->
+        <div style="border:1px solid var(--border); padding:1.5rem; font-family:var(--font-mono); font-size:13px;">
+          <div style="color:var(--accent); margin-bottom:1rem; font-size:11px; letter-spacing:0.1em;">INFO.json</div>
+          <div style="color:var(--muted); line-height:2;">
+            <div><span style="color:var(--text);">"ubicación"</span>: "Nuevo León, México"</div>
+            <div><span style="color:var(--text);">"rol"</span>: "InfoSec Specialist"</div>
+            <div><span style="color:var(--text);">"enfoque"</span>: ["GRC", "SOC", "ISO 27001"]</div>
+            <div><span style="color:var(--text);">"idiomas"</span>: ["ES", "EN"]</div>
+            <div><span style="color:var(--text);">"disponibilidad"</span>: <span style="color:#4FD1A5;">true</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header">
+      <span class="section-tag">02 / SKILLS</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>GRC &amp; COMPLIANCE</h3>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">ISO/IEC 27001 — SGSI <span>90%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Risk Assessment <span>85%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Auditoría &amp; Compliance <span>80%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Documentación de Políticas <span>85%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>SOC &amp; OPERACIONES</h3>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Monitoreo &amp; Análisis de Alertas <span>85%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Incident Response <span>80%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Análisis de Logs / SIEM <span>75%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">Network Security <span>70%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICACIONES -->
+  <section id="certs">
+    <div class="section-header">
+      <span class="section-tag">03 / CERTIFICACIONES</span>
+      <!-- ==========================
+     INSIGNIAS VISUALES
+========================== -->
+
+<div class="badges-section">
+
+  <!-- IBM -->
+
+  <div class="platform-group">
+
+```
+<h3 class="platform-title">IBM SKILLSBUILD</h3>
+
+<div class="badges-grid">
+
+  <div class="badge-card">
+    <img src="images/badges/ibm/ai-fundamentals.png">
+    <div class="badge-name">
+      Artificial Intelligence Fundamentals
+    </div>
+    <div class="badge-source">
+      IBM SkillsBuild
+    </div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/ibm/design-thinking.png">
+    <div class="badge-name">
+      Enterprise Design Thinking Practitioner
+    </div>
+    <div class="badge-source">
+      IBM SkillsBuild
+    </div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/ibm/emerging-tech.png">
+    <div class="badge-name">
+      Explore Emerging Tech
+    </div>
+    <div class="badge-source">
+      IBM SkillsBuild
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- CERTIPROF -->
+
+  <div class="platform-group">
+
+```
+<h3 class="platform-title">CERTIPROF</h3>
+
+<div class="badges-grid">
+
+  <div class="badge-card">
+    <img src="images/badges/certiprof/iso27001.png">
+    <div class="badge-name">
+      ISO/IEC 27001 Lead Implementer
+    </div>
+    <div class="badge-source">
+      Certiprof
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- FORTINET -->
+
+  <div class="platform-group">
+
+```
+<h3 class="platform-title">FORTINET</h3>
+
+<div class="badges-grid">
+
+  <div class="badge-card">
+    <img src="images/badges/fortinet/fcf-cybersecurity.png">
+    <div class="badge-name">
+      Fortinet Certified Fundamentals
+    </div>
+    <div class="badge-source">
+      Cybersecurity
+    </div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/fortinet/getting-started.png">
+    <div class="badge-name">
+      Getting Started in Cybersecurity
+    </div>
+    <div class="badge-source">
+      Fortinet
+    </div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/fortinet/threat-landscape.png">
+    <div class="badge-name">
+      Introduction to the Threat Landscape
+    </div>
+    <div class="badge-source">
+      Fortinet
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- CISCO -->
+
+  <div class="platform-group">
+
+```
+<h3 class="platform-title">CISCO</h3>
+
+<div class="badges-grid">
+
+  <div class="badge-card">
+    <img src="images/badges/cisco/introduction-cybersecurity.png">
+    <div class="badge-name">
+      Introduction to Cybersecurity
+    </div>
+    <div class="badge-source">
+      Cisco Networking Academy
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- TRYHACKME -->
+
+  <div class="platform-group">
+
+```
+<h3 class="platform-title">TRYHACKME</h3>
+
+<div class="badges-grid">
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge1.png">
+    <div class="badge-name">Badge 1</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge2.png">
+    <div class="badge-name">Badge 2</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge3.png">
+    <div class="badge-name">Badge 3</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge4.png">
+    <div class="badge-name">Badge 4</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge5.png">
+    <div class="badge-name">Badge 5</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge6.png">
+    <div class="badge-name">Badge 6</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge7.png">
+    <div class="badge-name">Badge 7</div>
+  </div>
+
+  <div class="badge-card">
+    <img src="images/badges/tryhackme/badge8.png">
+    <div class="badge-name">Badge 8</div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</div>
+
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="cert-filters">
+      <button class="cert-filter-btn active" data-filter="all">Todas</button>
+      <button class="cert-filter-btn" data-filter="grс">GRC</button>
+      <button class="cert-filter-btn" data-filter="soc">SOC / Threat</button>
+      <button class="cert-filter-btn" data-filter="cloud">Cloud</button>
+      <button class="cert-filter-btn" data-filter="soft">Habilidades Blandas</button>
+      <button class="cert-filter-btn" data-filter="linkedin">LinkedIn Learning</button>
+      <button class="cert-filter-btn" data-filter="cybrary">Cybrary</button>
+      <button class="cert-filter-btn" data-filter="purple">Purple Academy</button>
+      <button class="cert-filter-btn" data-filter="fortinet">Fortinet</button>
+      <button class="cert-filter-btn" data-filter="eset">ESET Academy</button>
+      <button class="cert-filter-btn" data-filter="udemy">Udemy</button>
+      <button class="cert-filter-btn" data-filter="otros">Otros</button>
+    </div>
+
+    <div class="certs-grid" id="certs-grid">
+
+      <!-- CERTIPROF -->
+      <div class="cert-card" data-tags="grс otros">
+        <div class="cert-icon">ISO</div>
+        <div class="cert-info">
+          <h3>ISO/IEC 27001:2022 Lead Implementer</h3>
+          <p class="cert-meta">Certiprof · Nov 10 2025</p>
+          <p class="cert-status expires">● ACTIVA · Expira Nov 2028</p>
+        </div>
+      </div>
+
+      <!-- LINKEDIN LEARNING -->
+      <div class="cert-card" data-tags="linkedin soft">
+        <div class="cert-icon">LI</div>
+        <div class="cert-info">
+          <h3>Cómo trabajar con gente difícil</h3>
+          <p class="cert-meta">LinkedIn Learning · Jun 09 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="linkedin cloud">
+        <div class="cert-icon">LI</div>
+        <div class="cert-info">
+          <h3>Gestión de la nube con Microsoft Intune</h3>
+          <p class="cert-meta">LinkedIn Learning · Jun 08 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="linkedin cloud">
+        <div class="cert-icon">LI</div>
+        <div class="cert-info">
+          <h3>Microsoft Intune y Autopilot Esencial</h3>
+          <p class="cert-meta">LinkedIn Learning · Jun 07 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="linkedin cloud">
+        <div class="cert-icon">LI</div>
+        <div class="cert-info">
+          <h3>Microsoft Entra ID: Identidad, Autenticación y Autorización en Azure</h3>
+          <p class="cert-meta">LinkedIn Learning · Jun 11 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- CYBRARY -->
+      <div class="cert-card" data-tags="cybrary soc">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>Defensive Security Operations</h3>
+          <p class="cert-meta">Cybrary · May 25 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="cybrary soc grс">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>Defensive Security and Cyber Risk</h3>
+          <p class="cert-meta">Cybrary · May 22 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="cybrary grс">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>Compliance Basics</h3>
+          <p class="cert-meta">Cybrary · May 13 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="cybrary grс">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>Governance Basics</h3>
+          <p class="cert-meta">Cybrary · May 09 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="cybrary grс">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>Risk Management Basics</h3>
+          <p class="cert-meta">Cybrary · May 19 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="cybrary cloud">
+        <div class="cert-icon">CY</div>
+        <div class="cert-info">
+          <h3>AZ-900 Cloud Concepts</h3>
+          <p class="cert-meta">Cybrary · May 22 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- FORTINET -->
+      <div class="cert-card" data-tags="fortinet soc">
+        <div class="cert-icon">FT</div>
+        <div class="cert-info">
+          <h3>Getting Started in Cybersecurity 3.0</h3>
+          <p class="cert-meta">Fortinet · Abr 23 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="fortinet soc">
+        <div class="cert-icon">FT</div>
+        <div class="cert-info">
+          <h3>Introduction to Threat Landscape 2.0</h3>
+          <p class="cert-meta">Fortinet · Nov 22 2024</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="fortinet soc">
+        <div class="cert-icon">FT</div>
+        <div class="cert-info">
+          <h3>Introduction to Threat Landscape 3.0</h3>
+          <p class="cert-meta">Fortinet · Abr 09 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- PURPLE ACADEMY -->
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Foundations of Threat Hunting</h3>
+          <p class="cert-meta">Purple Academy · Mar 12 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Fundamentals of Modern Log Management Practices</h3>
+          <p class="cert-meta">Purple Academy · Abr 23 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Fundamentals of SIEM Alert Rule Development</h3>
+          <p class="cert-meta">Purple Academy · Mar 20 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Operationalizing MITRE ATT&amp;CK for SOCs</h3>
+          <p class="cert-meta">Purple Academy · Mar 12 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Ransomware Attacks: Basics, TTPs, and Countermeasures</h3>
+          <p class="cert-meta">Purple Academy · Jun 19 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Ransomware Detection in Early Phases of the Attack Lifecycle</h3>
+          <p class="cert-meta">Purple Academy · Jun 22 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Ransomware Detection in Late Phases of the Attack Lifecycle</h3>
+          <p class="cert-meta">Purple Academy · Jun 23 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PA</div>
+        <div class="cert-info">
+          <h3>Fundamentals of Continuous Security Validation</h3>
+          <p class="cert-meta">Purple Academy · Jun 25 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- PICUS / PURPLE ACADEMY -->
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PC</div>
+        <div class="cert-info">
+          <h3>Picus Platform — Detection Rule Validation Use Cases</h3>
+          <p class="cert-meta">PICUS | Purple Academy · Jul 07 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PC</div>
+        <div class="cert-info">
+          <h3>Picus Platform — Security Control Validation Use Cases</h3>
+          <p class="cert-meta">PICUS | Purple Academy · Jul 07 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soc">
+        <div class="cert-icon">PC</div>
+        <div class="cert-info">
+          <h3>Picus Platform — Attack Path Validation Use Cases</h3>
+          <p class="cert-meta">PICUS | Purple Academy · Jul 07 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="purple soft">
+        <div class="cert-icon">PC</div>
+        <div class="cert-info">
+          <h3>Picus Enablement — Sales Teams</h3>
+          <p class="cert-meta">PICUS | Purple Academy · Jul 07 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- ESET ACADEMY -->
+      <div class="cert-card" data-tags="eset soc">
+        <div class="cert-icon">ES</div>
+        <div class="cert-info">
+          <h3>Gestión y Respuesta a Incidentes</h3>
+          <p class="cert-meta">ESET Academy · Sep 23 2023</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="eset soc">
+        <div class="cert-icon">ES</div>
+        <div class="cert-info">
+          <h3>Seguridad en las Transacciones Comerciales en Línea</h3>
+          <p class="cert-meta">ESET Academy · Sep 24 2023</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="eset soc">
+        <div class="cert-icon">ES</div>
+        <div class="cert-info">
+          <h3>Seguridad Móvil</h3>
+          <p class="cert-meta">ESET Academy · Oct 05 2023</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- UDEMY -->
+      <div class="cert-card" data-tags="udemy grс">
+        <div class="cert-icon">UD</div>
+        <div class="cert-info">
+          <h3>Understanding HIPAA Compliance</h3>
+          <p class="cert-meta">Udemy · Ene 19 2026</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-card" data-tags="udemy grс">
+        <div class="cert-icon">UD</div>
+        <div class="cert-info">
+          <h3>Implementación y Cumplimiento del Estándar PCI DSS</h3>
+          <p class="cert-meta">Udemy · Ago 25 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- THE FINOPS FOUNDATION -->
+      <div class="cert-card" data-tags="otros cloud">
+        <div class="cert-icon">FO</div>
+        <div class="cert-info">
+          <h3>Introduction to FinOps</h3>
+          <p class="cert-meta">The FinOps Foundation · Sep 29 2025</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <!-- COGNITIVE CLASS -->
+      <div class="cert-card" data-tags="otros">
+        <div class="cert-icon">CC</div>
+        <div class="cert-info">
+          <h3>SQL y Bases de Datos Relacionales 101</h3>
+          <p class="cert-meta">Cognitive Class.ai · Ago 18 2022</p>
+          <p class="cert-status active">● OBTENIDA</p>
+        </div>
+      </div>
+
+      <div class="cert-no-results" id="cert-no-results">Sin resultados para este filtro.</div>
+
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('.cert-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cert-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        const cards = document.querySelectorAll('.cert-card');
+        let visible = 0;
+        cards.forEach(card => {
+          const tags = card.dataset.tags || '';
+          const show = filter === 'all' || tags.split(' ').includes(filter);
+          card.classList.toggle('hidden', !show);
+          if (show) visible++;
+        });
+        document.getElementById('cert-no-results').style.display = visible === 0 ? 'block' : 'none';
+      });
+    });
+  </script>
+
+  <!-- PROYECTOS -->
+  <section id="proyectos">
+    <div class="section-header">
+      <span class="section-tag">04 / PROYECTOS</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="projects-list">
+
+      <a href="#" class="project-item">
+        <div>
+          <h3>Implementación de SGSI — ISO/IEC 27001</h3>
+          <p>Implementación de controles y sistema de gestión de seguridad de la información en entorno de clientes postventa, incluyendo análisis de brechas, documentación de políticas y acompañamiento en auditorías.</p>
+          <div class="project-tags">
+            <span class="project-tag">ISO 27001</span>
+            <span class="project-tag">Risk Assessment</span>
+            <span class="project-tag">Compliance</span>
+            <span class="project-tag">Políticas de Seguridad</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="#" class="project-item">
+        <div>
+          <h3>Operaciones SOC — Agente CIRI</h3>
+          <p>Monitoreo continuo de alertas de seguridad, análisis de eventos, escalación y respuesta a incidentes en entorno operativo corporativo.</p>
+          <div class="project-tags">
+            <span class="project-tag">SOC</span>
+            <span class="project-tag">Incident Response</span>
+            <span class="project-tag">Análisis de Alertas</span>
+            <span class="project-tag">SIEM</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- TRAYECTORIA -->
+  <section id="objetivos">
+    <div class="section-header">
+      <span class="section-tag">05 / TRAYECTORIA</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="goals-timeline">
+
+      <div class="goal-item done">
+        <p class="goal-period">FORMACIÓN TÉCNICA</p>
+        <h3>Técnico en Programación Web</h3>
+        <p>Título técnico con enfoque en Tecnologías de la Información y Comunicación. Base en desarrollo web que sustenta mi comprensión técnica de los sistemas que hoy protejo.</p>
+      </div>
+
+      <div class="goal-item done">
+        <p class="goal-period">FORMACIÓN UNIVERSITARIA</p>
+        <h3>Licenciatura en Seguridad en Tecnologías de la Información</h3>
+        <p>Formación especializada en seguridad de la información, gestión de riesgos, criptografía y marcos normativos.</p>
+      </div>
+
+      <div class="goal-item done">
+        <p class="goal-period">EXPERIENCIA OPERATIVA</p>
+        <h3>Agente CIRI — Operaciones SOC</h3>
+        <p>Monitoreo, análisis y respuesta a incidentes de seguridad en entorno corporativo. Exposición directa a amenazas activas y procesos de escalación.</p>
+      </div>
+
+      <div class="goal-item done">
+        <p class="goal-period">ESPECIALIZACIÓN</p>
+        <h3>Ingeniero de Soporte Postventa — ISO/IEC 27001</h3>
+        <p>Implementación de controles y SGSI en entornos de clientes. Gestión de brechas, documentación de políticas y acompañamiento en auditorías. Certificación ISO/IEC 27001:2022 Lead Implementer.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OBJETIVOS -->
+  <section id="roadmap" style="padding-top:0;">
+    <div class="section-header">
+      <span class="section-tag">06 / OBJETIVOS</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="goals-timeline">
+
+      <div class="goal-item">
+        <p class="goal-period">PRÓXIMO</p>
+        <h3>Consolidación en GRC</h3>
+        <p>Profundizar en marcos como NIST CSF, ISO 31000 y regulaciones regionales. Sumar una certificación complementaria en gestión de riesgos o privacidad (CISM, CRISC, o similar).</p>
+      </div>
+
+      <div class="goal-item">
+        <p class="goal-period">EXPANSIÓN</p>
+        <h3>Cloud Security</h3>
+        <p>Escalar el perfil hacia la seguridad en entornos de nube (Azure / AWS), aprovechando la base en Intune, Entra ID y AZ-900 como punto de partida.</p>
+      </div>
+
+      <div class="goal-item">
+        <p class="goal-period">OBJETIVO</p>
+        <h3>Consultor o Arquitecto de Seguridad</h3>
+        <p>Liderar estrategias de seguridad de la información a nivel organizacional, combinando visión técnica con gestión del riesgo empresarial.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="section-header">
+      <span class="section-tag">07 / CONTACTO</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-text">
+        <h2>Hablemos</h2>
+        <p style="margin-top:1rem;">
+          ¿Tienes un proyecto, una oportunidad o simplemente quieres conectar en el mundo de la ciberseguridad? Estoy disponible para colaboraciones, consultoría y nuevas oportunidades.
+        </p>
+        <p style="margin-top:1rem;">
+          Respondo en menos de 24 horas.
+        </p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:davidsmams@gmail.com" class="contact-link">
+          davidsmams@gmail.com
+          <span>EMAIL →</span>
+        </a>
+        <a href="https://www.linkedin.com/in/david-garcia-salazar" target="_blank" class="contact-link">
+          LinkedIn
+          <span>PERFIL →</span>
+        </a>
+        <a href="https://github.com/tu-usuario" target="_blank" class="contact-link">
+          GitHub
+          <span>CÓDIGO →</span>
+        </a>
+        <a href="https://tryhackme.com/p/DavidGarcia" target="_blank" class="contact-link">
+          TryHackMe
+          <span>RANKING →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>// construido con propósito · alojado en GitHub Pages</span>
+  </footer>
+
+</body>
+</html>
