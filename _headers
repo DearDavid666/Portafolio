@@ -1,0 +1,21 @@
+/*
+  # Evita ataques de clickjacking
+  X-Frame-Options: DENY
+
+  # El navegador no intenta adivinar el tipo de contenido
+  X-Content-Type-Options: nosniff
+
+  # Fuerza HTTPS durante 1 año en todas las rutas
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # No filtra la URL de origen al navegar a sitios externos
+  Referrer-Policy: no-referrer
+
+  # Deshabilita funciones del navegador que no se usan en este sitio
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+  # Content Security Policy: solo permite lo estrictamente necesario
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none';
+
+  # Protección XSS en navegadores legacy
+  X-XSS-Protection: 1; mode=block
