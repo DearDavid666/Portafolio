@@ -610,7 +610,37 @@
     }
 
 }
-        </style>
+          /* ── CV DOWNLOAD ── */
+    .cv-buttons {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .cv-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.65rem 1.4rem;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .cv-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cv-btn.primary {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .cv-btn.primary:hover { background: var(--accent); color: var(--navy); }
+    .cv-invite {
+      margin-top: 0.75rem;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
@@ -637,6 +667,14 @@
       Especialista en seguridad de la información con experiencia en operaciones SOC e implementación de sistemas de gestión bajo ISO/IEC 27001.
     </p>
     <a href="#contacto" class="hero-cta">Contáctame →</a>
+
+    <div style="margin-top: 2rem;">
+      <div class="cv-buttons">
+        <a href="cv/cv-grc.pdf" download class="cv-btn primary">⬇ CV — GRC & Compliance</a>
+        <a href="cv/cv-soc.pdf" download class="cv-btn">⬇ CV — SOC & Operaciones</a>
+      </div>
+      <p class="cv-invite">¿No sabes cuál elegir? Echa un vistazo al sitio completo —<br>cada sección está pensada para contarte quién soy y lo que puedo aportarte.</p>
+    </div>
 
     <div class="hero-grid">
       <div class="hero-stat">
@@ -1447,6 +1485,14 @@
         <p style="margin-top:1rem;">
           Respondo en menos de 24 horas.
         </p>
+        <div style="margin-top: 1.75rem;">
+          <p style="font-size:12px; font-family:var(--font-mono); color:var(--accent); letter-spacing:0.08em; margin-bottom:0.75rem;">DESCARGAR CV</p>
+          <div class="cv-buttons">
+            <a href="cv/cv-grc.pdf" download class="cv-btn primary">⬇ CV — GRC & Compliance</a>
+            <a href="cv/cv-soc.pdf" download class="cv-btn">⬇ CV — SOC & Operaciones</a>
+          </div>
+          <p class="cv-invite">¿Tienes alguna duda sobre mi perfil o experiencia?<br>Con gusto te respondo — escríbeme al correo o por LinkedIn.</p>
+        </div>
       </div>
       <div class="contact-links">
         <a href="mailto:davidsmams@gmail.com" class="contact-link">
