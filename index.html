@@ -281,6 +281,62 @@
       display: none;
     }
 
+    /* ── EXPERIENCIA ── */
+    .exp-list { display: flex; flex-direction: column; gap: 2rem; }
+    .exp-card {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      padding: 1.75rem 2rem;
+      transition: border-color 0.2s;
+    }
+    .exp-card:hover { border-color: var(--accent); }
+    .exp-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 1rem; margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .exp-role { font-size: 16px; font-weight: 500; margin-bottom: 3px; }
+    .exp-company {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+    }
+    .exp-period {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+    .exp-bullets {
+      list-style: none;
+      margin-bottom: 1.25rem;
+    }
+    .exp-bullets li {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 300;
+      padding: 4px 0 4px 1rem;
+      position: relative;
+      line-height: 1.6;
+    }
+    .exp-bullets li::before {
+      content: '›';
+      position: absolute; left: 0;
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .exp-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+    .exp-tool {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
     /* ── PROYECTOS ── */
     .projects-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
     .project-item {
@@ -565,6 +621,7 @@
       <li><a href="#sobre-mi">sobre mí</a></li>
       <li><a href="#skills">skills</a></li>
       <li><a href="#certs">certs</a></li>
+      <li><a href="#experiencia">experiencia</a></li>
       <li><a href="#proyectos">proyectos</a></li>
       <li><a href="#objetivos">trayectoria</a></li>
       <li><a href="#roadmap">objetivos</a></li>
@@ -1203,10 +1260,79 @@
     });
   </script>
 
+  <!-- EXPERIENCIA -->
+  <section id="experiencia">
+    <div class="section-header">
+      <span class="section-tag">04 / EXPERIENCIA</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="exp-list">
+
+      <!-- AGENTE CIRI -->
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Agente CIRI</div>
+            <div class="exp-company">Centro de Inteligencia y Respuesta a Incidentes</div>
+          </div>
+          <div class="exp-period">SOC · Monterrey, NL</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>Monitoreo continuo en múltiples plataformas de seguridad: WAF, SIEM (CrowdStrike, Trellix), honeypots y sensores de red (PRTG).</li>
+          <li>Atención y resolución de incidentes Nivel 1: bloqueo de IPs, análisis de alertas, escalación y documentación.</li>
+          <li>Análisis estático de aplicaciones web mediante Checkmarx e inspección de APKs con MobSF.</li>
+          <li>Monitoreo de protección de marca con Group-IB e investigación OSINT de sitios fraudulentos activos.</li>
+          <li>Elaboración de playbooks de investigación para incidentes recurrentes y manuales de herramientas (PRTG) para el equipo.</li>
+          <li>Atención de mesa de ayuda en temas de seguridad para usuarios internos.</li>
+        </ul>
+        <div class="exp-tools">
+          <span class="exp-tool">CrowdStrike</span>
+          <span class="exp-tool">Trellix</span>
+          <span class="exp-tool">PRTG</span>
+          <span class="exp-tool">Checkmarx</span>
+          <span class="exp-tool">MobSF</span>
+          <span class="exp-tool">Group-IB</span>
+          <span class="exp-tool">WAF</span>
+          <span class="exp-tool">Honeypot</span>
+          <span class="exp-tool">OSINT</span>
+        </div>
+      </div>
+
+      <!-- INGENIERO DE SOPORTE POSTVENTA -->
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">Ingeniero de Soporte — Postventa</div>
+            <div class="exp-company">Implementación ISO/IEC 27001</div>
+          </div>
+          <div class="exp-period">GRC · Monterrey, NL</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>Liderazgo en la implementación de SGSI bajo ISO/IEC 27001 en entornos de clientes: planeación, análisis de brechas y plan de trabajo.</li>
+          <li>Elaboración de políticas de seguridad, procedimientos, manuales y toda la documentación requerida por el estándar.</li>
+          <li>Análisis de riesgos, gestión de no conformidades y remediaciones para mantener el cumplimiento normativo.</li>
+          <li>Sesiones de avance y resultados con clientes para comunicar el estado del SGSI y próximas acciones.</li>
+          <li>Monitoreo del DLP corporativo con Proofpoint, revisión de alertas y apoyo en la resolución de incidentes de fuga de información.</li>
+          <li>Capacitación al área de preventa: pláticas y sesiones sobre ISO/IEC 27001 para fortalecer el conocimiento del equipo comercial.</li>
+        </ul>
+        <div class="exp-tools">
+          <span class="exp-tool">ISO 27001</span>
+          <span class="exp-tool">Enveedo</span>
+          <span class="exp-tool">Proofpoint DLP</span>
+          <span class="exp-tool">Risk Assessment</span>
+          <span class="exp-tool">GRC</span>
+          <span class="exp-tool">Políticas de Seguridad</span>
+          <span class="exp-tool">Auditoría</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- PROYECTOS -->
   <section id="proyectos">
     <div class="section-header">
-      <span class="section-tag">04 / PROYECTOS</span>
+      <span class="section-tag">05 / PROYECTOS</span>
       <div class="section-rule"></div>
     </div>
     <div class="projects-list">
@@ -1245,7 +1371,7 @@
   <!-- TRAYECTORIA -->
   <section id="objetivos">
     <div class="section-header">
-      <span class="section-tag">05 / TRAYECTORIA</span>
+      <span class="section-tag">06 / TRAYECTORIA</span>
       <div class="section-rule"></div>
     </div>
     <div class="goals-timeline">
@@ -1280,7 +1406,7 @@
   <!-- OBJETIVOS -->
   <section id="roadmap" style="padding-top:0;">
     <div class="section-header">
-      <span class="section-tag">06 / OBJETIVOS</span>
+      <span class="section-tag">07 / OBJETIVOS</span>
       <div class="section-rule"></div>
     </div>
     <div class="goals-timeline">
@@ -1309,7 +1435,7 @@
   <!-- CONTACTO -->
   <section id="contacto">
     <div class="section-header">
-      <span class="section-tag">07 / CONTACTO</span>
+      <span class="section-tag">08 / CONTACTO</span>
       <div class="section-rule"></div>
     </div>
     <div class="contact-grid">
